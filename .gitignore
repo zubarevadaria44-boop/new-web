@@ -1,0 +1,12 @@
+# зависимости
+node_modules/
+
+# сборка Next.js
+.next/
+out/
+
+# системные и служебные файлы
+.env
+.env.local
+.DS_Store
+*.log
