@@ -94,6 +94,14 @@ export default function NewsFeed({ category }) {
   const T3 = third ? translateItem(third) : null;
   const modalItem = openItem ? translateItem(openItem) : null;
 
+  const relatedItems = useMemo(() => {
+    if (!openItem) return [];
+    return items
+      .filter((i) => i.category === openItem.category && i.link !== openItem.link)
+      .slice(0, 3)
+      .map((i) => translateItem(i));
+  }, [openItem, items, translateItem]);
+
   return (
     <>
       <div className="controls">
@@ -215,7 +223,13 @@ export default function NewsFeed({ category }) {
         )}
       </main>
 
-      <ArticleModal item={modalItem} lang={lang} onClose={() => setOpenItem(null)} />
+      <ArticleModal
+        item={modalItem}
+        lang={lang}
+        relatedItems={relatedItems}
+        onClose={() => setOpenItem(null)}
+        onOpenRelated={(r) => setOpenItem(r)}
+      />
     </>
   );
 }
