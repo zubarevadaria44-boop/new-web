@@ -4,9 +4,24 @@ import { NewsProvider } from './context/NewsContext';
 import { LanguageProvider } from './context/LanguageContext';
 import SiteChrome from './components/SiteChrome';
 
+const SITE_URL = process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'https://new-web-tan-omega.vercel.app';
+
 export const metadata = {
+  metadataBase: new URL(SITE_URL),
   title: 'Полдень — живая лента новостей',
   description: 'Живая новостная лента: РИА, ТАСС, Lenta.ru, Коммерсантъ, BBC Russian',
+  openGraph: {
+    title: 'Полдень — живая лента новостей',
+    description: 'Живая новостная лента: РИА, ТАСС, Lenta.ru, Коммерсантъ, BBC Russian',
+    siteName: 'Полдень',
+    locale: 'ru_RU',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Полдень — живая лента новостей',
+    description: 'Живая новостная лента: РИА, ТАСС, Lenta.ru, Коммерсантъ, BBC Russian',
+  },
 };
 
 export const revalidate = 300;

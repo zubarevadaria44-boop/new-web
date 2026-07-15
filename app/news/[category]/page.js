@@ -8,8 +8,16 @@ export function generateStaticParams() {
 
 export function generateMetadata({ params }) {
   const name = slugToCategoryName(params.category);
+  if (!name) {
+    return { title: 'Раздел не найден — Полдень' };
+  }
+  const title = `${name} — Полдень`;
+  const description = `Свежие новости раздела «${name}»: РИА, ТАСС, Lenta.ru, Коммерсантъ, BBC Russian`;
   return {
-    title: name ? `${name} — Полдень` : 'Раздел не найден — Полдень',
+    title,
+    description,
+    openGraph: { title, description },
+    twitter: { title, description },
   };
 }
 
