@@ -3,9 +3,8 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { NAV_ITEMS } from '../../lib/news';
+import { NAV_ITEMS, ARTICLES } from '../../lib/articles';
 import { t, translateCategoryName } from '../../lib/i18n';
-import { useNews } from '../context/NewsContext';
 import { useLanguage } from '../context/LanguageContext';
 
 function categoryNameForPath(pathname) {
@@ -13,10 +12,9 @@ function categoryNameForPath(pathname) {
   return item ? item.name : 'Главное';
 }
 
-export default function SiteChrome({ children }) {
+export default function SiteChrome({ children, currency }) {
   const pathname = usePathname();
   const activeName = categoryNameForPath(pathname);
-  const { items, failedSources, currency, updatedAt, loading, refresh } = useNews();
   const { lang, toggleLang } = useLanguage();
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [clock, setClock] = useState('');
@@ -57,10 +55,10 @@ export default function SiteChrome({ children }) {
 
   const counts = {};
   NAV_ITEMS.forEach((n) => {
-    counts[n.name] = n.name === 'Главное' ? items.length : items.filter((i) => i.category === n.name).length;
+    counts[n.name] = n.name === 'Главное' ? ARTICLES.length : ARTICLES.filter((a) => a.category === n.name).length;
   });
 
-  const ticker = items.slice(0, 14);
+  const ticker = [...ARTICLES].sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate)).slice(0, 14);
 
   return (
     <>
@@ -93,14 +91,8 @@ export default function SiteChrome({ children }) {
 
       <div className="ticker-wrap">
         <div className="ticker-track">
-          {ticker.length ? (
-            <>
-              {ticker.map((i, idx) => <span key={idx}>{i.title}</span>)}
-              {ticker.map((i, idx) => <span key={'b' + idx}>{i.title}</span>)}
-            </>
-          ) : (
-            <span>{t('emptyLoading', lang)}</span>
-          )}
+          {ticker.map((i, idx) => <span key={idx}>{i.title}</span>)}
+          {ticker.map((i, idx) => <span key={'b' + idx}>{i.title}</span>)}
         </div>
       </div>
 
@@ -120,21 +112,12 @@ export default function SiteChrome({ children }) {
             </li>
           ))}
         </ul>
-        <div className="drawer-footer">РИА Новости · ТАСС · Lenta.ru · Коммерсантъ · BBC Russian</div>
+        <div className="drawer-footer">Полдень — журнал о жизни Самары</div>
       </nav>
-
-      <div className="status-row">
-        <span>
-          {loading
-            ? t('updating', lang)
-            : `${t('loadedCount', lang, items.length)}${updatedAt ? ` · ${t('lastUpdate', lang)} ${new Date(updatedAt).toLocaleTimeString(locale, { hour: '2-digit', minute: '2-digit' })}` : ''}${failedSources.length ? ` · ${t('notResponding', lang)}: ${failedSources.join(', ')}` : ''}`}
-        </span>
-        <button className="refresh-btn" onClick={refresh}>{t('refreshNow', lang)}</button>
-      </div>
 
       {children}
 
-      <footer>РИА Новости · ТАСС · Lenta.ru · Коммерсантъ · BBC Russian — {t('updateEvery5', lang)}</footer>
+      <footer>Полдень — самарский городской журнал · {ARTICLES.length} материалов</footer>
     </>
   );
 }

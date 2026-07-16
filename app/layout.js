@@ -1,6 +1,4 @@
 import './globals.css';
-import { fetchAllNews } from '../lib/news';
-import { NewsProvider } from './context/NewsContext';
 import { LanguageProvider } from './context/LanguageContext';
 import SiteChrome from './components/SiteChrome';
 
@@ -8,26 +6,39 @@ const SITE_URL = process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 
 
 export const metadata = {
   metadataBase: new URL(SITE_URL),
-  title: 'Полдень — живая лента новостей',
-  description: 'Живая новостная лента: РИА, ТАСС, Lenta.ru, Коммерсантъ, BBC Russian',
+  title: 'Полдень — самарский городской журнал',
+  description: 'Авторские материалы о жизни Самары: события, места, люди',
   openGraph: {
-    title: 'Полдень — живая лента новостей',
-    description: 'Живая новостная лента: РИА, ТАСС, Lenta.ru, Коммерсантъ, BBC Russian',
+    title: 'Полдень — самарский городской журнал',
+    description: 'Авторские материалы о жизни Самары: события, места, люди',
     siteName: 'Полдень',
     locale: 'ru_RU',
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Полдень — живая лента новостей',
-    description: 'Живая новостная лента: РИА, ТАСС, Lenta.ru, Коммерсантъ, BBC Russian',
+    title: 'Полдень — самарский городской журнал',
+    description: 'Авторские материалы о жизни Самары: события, места, люди',
   },
 };
+
+async function fetchCurrency() {
+  try {
+    const res = await fetch('https://www.cbr-xml-daily.ru/daily_json.js', { next: { revalidate: 300 } });
+    const data = await res.json();
+    return {
+      usd: data?.Valute?.USD?.Value ? Number(data.Valute.USD.Value.toFixed(2)) : null,
+      eur: data?.Valute?.EUR?.Value ? Number(data.Valute.EUR.Value.toFixed(2)) : null,
+    };
+  } catch (e) {
+    return { usd: null, eur: null };
+  }
+}
 
 export const revalidate = 300;
 
 export default async function RootLayout({ children }) {
-  const initialData = await fetchAllNews();
+  const currency = await fetchCurrency();
 
   return (
     <html lang="ru">
@@ -40,9 +51,7 @@ export default async function RootLayout({ children }) {
       </head>
       <body>
         <LanguageProvider>
-          <NewsProvider initialData={initialData}>
-            <SiteChrome>{children}</SiteChrome>
-          </NewsProvider>
+          <SiteChrome currency={currency}>{children}</SiteChrome>
         </LanguageProvider>
       </body>
     </html>

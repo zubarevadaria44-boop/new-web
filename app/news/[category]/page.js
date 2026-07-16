@@ -1,5 +1,5 @@
 import { notFound } from 'next/navigation';
-import { CATEGORY_LIST, slugToCategoryName } from '../../../lib/news';
+import { CATEGORY_LIST, slugToCategoryName, getArticlesByCategory } from '../../../lib/articles';
 import NewsFeed from '../../components/NewsFeed';
 
 export function generateStaticParams() {
@@ -12,7 +12,7 @@ export function generateMetadata({ params }) {
     return { title: 'Раздел не найден — Полдень' };
   }
   const title = `${name} — Полдень`;
-  const description = `Свежие новости раздела «${name}»: РИА, ТАСС, Lenta.ru, Коммерсантъ, BBC Russian`;
+  const description = `Материалы раздела «${name}» самарского журнала «Полдень»`;
   return {
     title,
     description,
@@ -24,5 +24,5 @@ export function generateMetadata({ params }) {
 export default function CategoryPage({ params }) {
   const name = slugToCategoryName(params.category);
   if (!name) notFound();
-  return <NewsFeed category={name} />;
+  return <NewsFeed category={name} articles={getArticlesByCategory(name)} />;
 }
