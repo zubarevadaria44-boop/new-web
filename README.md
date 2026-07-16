@@ -1,12 +1,12 @@
-# Полдень — самарский городской журнал
+# Polden" — City Magazine
 
 ## Что изменилось
 
-Сайт больше не агрегирует RSS сторонних новостных изданий (РИА, ТАСС,
-Lenta.ru, Коммерсантъ, BBC Russian). Теперь это полностью авторский
-проект: 20 собственных материалов о жизни Самары, которые можно
-свободно публиковать и показывать целиком — прямо на сайте, без
-"читать полностью на источнике".
+Die Website aggregiert keine RSS-Feeds von externen Nachrichtenmedien mehr (RIA, TASS,
+Lenta.ru, Kommersant, BBC Russian). Nun handelt es sich um ein rein eigenständiges
+Projekt: 20 eigene Beiträge über das Leben in Samara, die
+frei veröffentlicht und vollständig angezeigt werden können – direkt auf der Website, ohne
+den Hinweis „Den vollständigen Artikel auf der Quelle lesen“.
 
 ## Структура
 
